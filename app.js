@@ -59,3 +59,27 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+
+//---------------------------------------------
+
+var namespace='defaultPrivate1';
+
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', function(socket){
+  socket.on(namespace, function(msg){
+    io.emit(namespace, msg);
+    console.log(msg);
+  });
+});
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
